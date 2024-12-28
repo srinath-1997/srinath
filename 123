@@ -1,0 +1,6 @@
+   stage('execute playbook')
+        {
+            steps{
+                ansibleplaybook credentialsId: 'ansible' , diableHostKeyChecking: true, installation: 'ansible' , inventory: '/home/ansiuser/myinventory' , playbook: 'ansible-playbook.yml' , vaultpath: ' '
+    }
+}
