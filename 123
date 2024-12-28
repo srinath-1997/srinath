@@ -4,3 +4,62 @@
                 ansibleplaybook credentialsId: 'ansible' , diableHostKeyChecking: true, installation: 'ansible' , inventory: '/home/ansiuser/myinventory' , playbook: 'ansible-playbook.yml' , vaultpath: ' '
     }
 }
+
+
+pipeline {
+    agent any
+    
+    tools {
+        maven 'mymaven'  
+    }
+
+    stages {
+        stage('Clone Repo') {
+            steps {
+                git 'https://github.com/srinath-1997/star-agile-insurance-project.git'
+            }
+        }
+
+        stage('Test Code') {
+            steps {
+                sh 'mvn test' 
+            }
+        }
+
+        stage('Build Code') {
+            steps {
+                sh 'mvn package'  
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                sh 'docker build -t insurenceproject:$BUILD_NUMBER .'  // Build Docker image
+            }
+        }
+
+        
+        stage('Push the Image to Dockerhub') {
+            steps {
+                withCredentials([string(credentialsId: 'DOCKER_HUB_PASWD', variable: 'DOCKER_HUB_PASWD')]) {
+                    sh 'docker login -u srinath7019 -p ${DOCKER_HUB_PASWD}'  // Login to DockerHub
+                }
+                sh 'docker tag insurenceproject:$BUILD_NUMBER srinath7019/insurenceproject:$BUILD_NUMBER'  
+                sh 'docker push srinath7019/insurenceproject:$BUILD_NUMBER' 
+            }
+        }
+
+        stage('Execute Ansible Playbook') {
+            steps {
+                ansiblePlaybook(
+                    credentialsId: 'ansible',  
+                    disableHostKeyChecking: true,
+                    installation: 'ansible', 
+                    inventory: '/home/ansiuser/myinventory',  
+                    playbook: 'ansible-playbook.yml',  
+                    vaultPasswordFile: '' 
+                )
+            }
+        }
+    }
+}
