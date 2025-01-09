@@ -2,53 +2,46 @@ pipeline {
     agent any
 
     tools {
-        maven 'mymaven'
-     }
+    maven 'mymaven'
+    }
 
-     stages {
-         stage ('clone the repository')
-         {
-              steps {
-                  git 'Github URL'
-              }
+    stages {
+        stage ('clone the repository'){
+            steps{
+                git 'github URL'
+            }
+         }
+
+         stage ('test the code'){
+             steps{
+                 sh 'mvn test'
+             }
           }
 
-          stage ('test the code') {
-              steps {
-                   sh 'mvn test'
+          stage ('Build the image'){
+              steps{
+                  sh 'docker build -t myapp:${BUILD_NUMBER} .'
               }
-          }
-
-          stage ('Build the code'){
-              steps {
-                   sh 'mvn package'
-              }
-          }
-
-          stage ('Build Image') {
-               steps {
-                   sh 'docker build -t bankingfinanceproject:${BUILD_NUMBER} .'
-               }
            }
 
            stage ('Deploy the image'){
-               steps {
-                   sh 'docker run -d -P bankingfinanceproject:${BUILD_NUMBER} '
+               steps{
+                   sh 'docker run -d -P myapp:${BUILD_NUMBER}'
                }
            }
 
-           stage ( 'push the image to dockerhub'){
-               steps {
-           withCredentials([string(Crendentialsid: 'DOCKER_HUB_PASWD', variable : 'DOCKER_HUB-PASWD')])
-                   {
-                   sh 'docker login -u srinath7019 -p ${DOCKER_HUB_PASWD}'
-                   }
-                    sh 'docker tag bankingfinanceproject:${BUILD_NUMBER} srinath7019/bankingfinanceproject:$${BUILD_NUMBER}'
-                    sh 'docker push srinath7019/bankingfinanceproject:${BUILD_NUMBER}'
-               }
-          }
-     }
- }
-                   
+           stage ('push the imageto dockerhub'){
+               steps{
+           withCredentials([string(crendetialsId: 'DOCKER_HUB_PASWD', variable: 'DOCKER_HUB_PASWD')])
+                  {
+                  sh 'docker login -u srinath7019 -p ${DOCKER_HUB_PASWD}'
+                 }
+                   sh 'docker tag myapp:${BUILD_NUMBER} srinath7019/myapp:${BUILD_NUMBER}'
+                   sh 'docker push srinath7019/myapp:${BUILD_NUMBER}'
+                }
+            }
+       }
+}
+               
                 
-             
+    
