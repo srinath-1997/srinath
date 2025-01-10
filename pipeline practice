@@ -6,42 +6,52 @@ pipeline {
     }
 
     stages {
-        stage ('clone the repository'){
-            steps{
-                git 'github URL'
+        stage ('clone the repo') {
+            steps {
+                git 'https://github.com/srinath-1997/srinath-repo.git'
             }
          }
 
-         stage ('test the code'){
-             steps{
+         stage ('Test the code') {
+             steps {
                  sh 'mvn test'
+             }
+         }
+
+         stage ('Build the code') {
+             steps {
+                 sh 'mvn package'
+             }
+         }
+
+         stage ('Build Image') {
+             steps {
+                 sh 'docker build -t myapp:${BUILD_NUMBER} .'
+              }
+         }
+
+         stage ('push the image to dockerhub') {
+             steps {
+         withCredentials([string(credentialsId: 'DOCKER_HUB_PASWD' , variable: 'DOCKER_HUB_PASWD')])
+             {
+              sh 'docker login -u srinath7019 -p ${DOCKER_HUB_PASWD}'
+             }
+              sh 'docker tag myapp:${BUILD_NUMBER} srinath7019/myapp:${BUILD_NUMBER}'
+              sh 'docker push srinath7019/myapp:${BUILD_NUMBER}'
              }
           }
 
-          stage ('Build the image'){
-              steps{
-                  sh 'docker build -t myapp:${BUILD_NUMBER} .'
-              }
-           }
-
-           stage ('Deploy the image'){
-               steps{
-                   sh 'docker run -d -P myapp:${BUILD_NUMBER}'
-               }
-           }
-
-           stage ('push the imageto dockerhub'){
-               steps{
-           withCredentials([string(crendetialsId: 'DOCKER_HUB_PASWD', variable: 'DOCKER_HUB_PASWD')])
-                  {
-                  sh 'docker login -u srinath7019 -p ${DOCKER_HUB_PASWD}'
-                 }
-                   sh 'docker tag myapp:${BUILD_NUMBER} srinath7019/myapp:${BUILD_NUMBER}'
-                   sh 'docker push srinath7019/myapp:${BUILD_NUMBER}'
+          stage ('Execute ansible playbook') {
+              steps {
+                  ansibleplaybook(
+                      credentialsId: 'ansible',
+                      disableHostKeyChecking: true,
+                      installation: 'ansible',
+                      inventory: '/home/ansiuser/myinventory',
+                      playbook: 'ansible-playbook.yml'
+                      vaultTmpPath: ''
+                   )
                 }
-            }
-       }
+           }
+      }
 }
-               
-                
-    
