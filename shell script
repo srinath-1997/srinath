@@ -7,3 +7,71 @@ defult so your script mide not execute if you are writing in bash scripting on a
 
 to print anything in shell scripting we use echo for example echo "my name is srinath"
 to execute shell script use ./ or sh command to execute
+
+alwaye write metadata in starting of your shell script
+example authou name, date, version, metion it as in comment
+
+to execute the script in debug mode use set -x or use echo statemnet before the command best use debug mode to understand
+if u dont want to show the commands simply the comment that line example 
+#!/bin/bash
+
+##############################
+#author: srinath
+#date:17/01/2025
+#day: Friday
+
+#############################
+
+set -x
+
+df -h
+
+free
+
+nproc
+
+pwd
+
+
+To find the the all processers running use ps -ef
+to see the specific procrssers ID use ps -ef | grep "amazon"
+pipe command sent the output of first command to second second command | this is pipe command
+
+diffrent VM channels are stdin stdout stderr
+date is a system defult command and using this command it send the out to stdin
+but pipe will not able to receive the information from stdin.
+pipe can only recive the information if not sending the information to stdin and if command ready to pass the information to another command
+awk command filter out the information from output
+ps -ef | grep amazon | awk -F " " '{print $2}'
+
+set -e it exist the script if there is an errors and it can not cautch pipe fails so also use set -o pipefail
+ser -o pipefile it use to exit the script is there is an error we cantot use this one only use set -e
+this will see only output of last command if last commnd execute the if there is an error also it not exit
+
+#!/bin/bash
+
+##############################
+#author: srinath
+#date:17/01/2025
+#day: Friday
+
+#############################
+
+set -x
+set -e
+set -o pipefail
+
+df -h
+
+free
+
+nproc
+
+pwd
+
+ps -ef | grep amazon | awk -F " " '{print $2}'
+
+using curl command you can retrive the data from internet
+using wget command you can download
+find ----> find the the specifed files in you given names
+sudo find / -name ssh
