@@ -1,0 +1,9 @@
+#!/  ---> shebag
+
+diffrent types of executuors in shell script is #!/bin/   bash, ksh, sh , dash  widly use is bash
+what is the diffrence b/w #!/bin/sh and #!/bin/bash
+previously both of them are same because #!/bin/sh is redircting to #!/bin/bash using linking concept but now it is not the same bacause some the OS have decided to use dash as 
+defult so your script mide not execute if you are writing in bash scripting on a machine where the dash is defult.
+
+to print anything in shell scripting we use echo for example echo "my name is srinath"
+to execute shell script use ./ or sh command to execute
