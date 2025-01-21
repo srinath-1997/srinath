@@ -125,6 +125,29 @@ set -x  it will run debug mode
 vim -r test.txt
 
 9) what is the diffrence between soft and hard link
+Definition: A soft link is a file that contains a reference (path) to another file or directory.
+
+Behavior:
+If the target file is deleted or moved, the soft link becomes a "broken link" and no longer points to anything.
+It works across different filesystems or partitions.
+ln -s target_file soft_link
+Use Cases:
+
+Commonly used for shortcuts or references to files or directories.
+Can link to directories.
+
+Hard Link
+Definition: A hard link is another name for a file, referencing the same inode as the target file.
+
+Behavior:
+
+If the target file is deleted, the hard link still retains access to the file's data (since the inode is still intact as long as at least one link exists).
+It cannot link to directories or files across different filesystems or partitions.
+ln target_file hard_link
+Use Cases:
+
+Used when you need multiple references to the same file with no dependency on the original file's name or location.
+Helpful for maintaining duplicate file references without using additional disk space.
 
 
 10) what is the diffrence between break and continue statements
@@ -142,13 +165,30 @@ continue ---> continuing the execution (skip) --> skip this continue the next
 12) what are the diffrent type of loops and when to use
 for loop, while loop, 
 
+Type	Best Use Case
+For Loop	Fixed number of iterations or iterating over collections.
+While Loop	When the termination condition is dynamic or unknown at the start.
+Do-While	Ensure code runs at least once before condition is checked.
+For-Each	Simplify iteration over collections without dealing with indexes.
+Nested Loops	Multi-level processing, such as traversing grids or hierarchical structures.
+Infinite Loops	Continuous operations requiring explicit conditions to terminate.
 
-16) Is bash dynamic or statically typed and why
+
+13) Is bash dynamic or statically typed and why
    bash is dynamically typed --- 
+Bash is dynamically typed because variables in Bash do not have a fixed data type associated with them when they 
+are declared. Instead, the type of a variable is determined at runtime, based on the context and how the value is used.
 
+14) Expalain about a network troubleshooting utiliy
+traceroute google.com or tracepath google.com
+Network troubleshooting utilities are essential tools used by IT professionals to diagnose and resolve network-related issues. 
+One of the most commonly used utilities is ping. Here's a detailed explanation of how it works and when to use it:
 
-17) Expalain about a network troubleshooting utiliy
-traceroute 
+15) how will you sort list of names in a file
+   sort
+
+16) how will you manage logs of a system that generate huge log file everyday
+   useing logrotate  you can mangae logs of file 
   
 
 
