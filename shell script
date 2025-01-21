@@ -75,3 +75,45 @@ using curl command you can retrive the data from internet
 using wget command you can download
 find ----> find the the specifed files in you given names
 sudo find / -name ssh
+
+
+Interview questions
+1) list some of the commonly used shell commands
+ls , cp , mv, mkdir, touch, vim, grep, find, top free, df -h, 
+
+2) write a simple shell script to list all processes
+ps -ef | grep amazon | awk -F " " '{print $2}'
+
+3) write a script to print only errors from a remote log
+curlcurl google.com |grep error   using curl pipe and grep commands
+
+4) write a shell script to print numbers divided by 3 and 5 and not 15
+#!/bin/bash
+
+#####################
+#Authour - srinath
+#date - 21/12/2024
+
+###################
+
+# divisible by 3 , divisible by 5 , not 3*5 = 15
+
+
+for i in {1..100}; do
+if ([ `expr $i % 3` == 0 ] || [ `expr $i % 5` == 0 ]) && [ `expr $i % 15` != 0 ];
+then
+        echo $i
+fi;
+done
+
+
+5) write a script to print of "S" in mississippi
+#!/bin/bash
+
+x=mississippi
+
+grep -o "s"  <<<"$x" | wc -l
+
+
+
+
