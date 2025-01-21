@@ -114,6 +114,44 @@ x=mississippi
 
 grep -o "s"  <<<"$x" | wc -l
 
+6) how will you debug the shell script
+set -x  it will run debug mode
+
+7) what is crontab in linux can you provide an example of usage
+ corntab is nothing but 
+
+
+8) how to open read onle file
+vim -r test.txt
+
+9) what is the diffrence between soft and hard link
+
+
+10) what is the diffrence between break and continue statements
+   break ---> breaking the execution
+continue ---> continuing the execution (skip) --> skip this continue the next
+
+11)  what are the disadvantegs of shell scripting
+     errors are frequently and costly, and a sigle error can alter the command
+     the execution speed is low
+     Bugs or inadequqcies un the language`s syntax or implimentation
+     Large, complex tasks aren't well suited to it
+     Contray to other scripting languages etc, it provides a minimal data structure
+     Every time a shell command is executed, a new process is launched.
+
+12) what are the diffrent type of loops and when to use
+for loop, while loop, 
+
+
+16) Is bash dynamic or statically typed and why
+   bash is dynamically typed --- 
+
+
+17) Expalain about a network troubleshooting utiliy
+traceroute 
+  
+
+
 
 
 
