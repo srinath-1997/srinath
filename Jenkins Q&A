@@ -1,0 +1,22 @@
+I what is the benefit of using Jenkins plugin version control.
+Ans: Ensuring consistent and reproducible plug Plugin contigurations.
+2) which approach requires developers to ensures that their Changes do not break the existing codebase 
+Ans continuous Integration.
+3) which launch method allows sensins to Stort the slave nodes using RMI (Remote method invocation)
+Ans: Launch agent via RMI
+4) which approach is more likely to detect & reslove integration issues Cate in the development process.
+Ans: Continuous Integration.
+5.) which component of Jenkins is responsible for managing the build queue & Scheduling build Jobs.
+Ans: Jenkins orchestrator
+6) which approach is more suitable for large-scale developmat projects with multiple teams?
+Ans: Traditional integration& Continuous Integration
+7) How does Jenking handle the case when multiple build Jobs are assigned to a single slove node.
+Ans: Jenkins parallelizes the build jobs on the slove node.
+8) How can you control plugin access spermissions in Jenkins
+Ans: By Contiguring plugin-specific access controls.
+9) How does Jenkins handle tue case when a build Job requires a specific operating system enviornment on the slove node.
+Ant: Jenkins spins up a new Sleve node with the required Operating system enviornment.
+10) what is Jenkins agent 
+Ans: A machine that executes Jenkins Jobs eri task
+11) How ae post-build actions detined in a declarative Pipeline in Jenkins.
+Ans: By using the "post" section in the Jenting tile
