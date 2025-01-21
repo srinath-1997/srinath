@@ -20,3 +20,45 @@ Ant: Jenkins spins up a new Sleve node with the required Operating system envior
 Ans: A machine that executes Jenkins Jobs eri task
 11) How ae post-build actions detined in a declarative Pipeline in Jenkins.
 Ans: By using the "post" section in the Jenting tile
+
+Jenkins
+which job tupe Supports declarative and scripted Syntax for detining the build pipeline to Jenkins.
+Ans: Jenkins pipeline job.
+2) How can you disable or uninstells Jenting Rugins
+An' Through the Jenkins plugin manager.
+3) what is the role of Jenkins in devops practices.
+Ans. Jenkins Supports and facilitates the integration and delivery of Software
+4)which component for managing of Jenting is responsible. the availability & healin of the Slave nodes.
+Ans. Jenkins master.
+5)which Job tupe Supports the use of Conditional build Steps in Jenkins.
+Ans: Jenbins pipeline Job.
+6) what is the purpose of Jenkins System notifications
+Ans: To provide alerts & notifications about Jenkins event.
+7) How Con Jenkins be contigured to authenticate wers.
+Ans: By integrating with an LOAD(@) Active directory server.
+8) which approach is more tocused on manual testing & debugging.
+Ans! Traditional integration.
+9) which componet of Jenkin is responible for eaccusing the build Jobs on the Stove nodes.
+Ans:- Jentins Executor
+10). which approaches mone suitable for Project with a Longer development cycle &intrequent code changes.
+Ans: Traditional Integration
+11) what is Jenkins pipeline Job
+Ans: A Job that detines the entire buil Pipeline as code.
+12) what is the role of automated testing in continuous integration. 
+Ans: To ensure the stability & qualive cy the Software.
+13) what is the the purpose of Jenkins System monitoring and metrics.
+Ans:- To Collect & analyse data ton Jeniny pert Performence.
+14) which Tob type allows users to configuri build Steps using a graphical user Intertale in Jeni
+Ans: Jenkins freestyle Job.
+15) which of the Continuous following & a key principle integration.
+Ans: keep the code in a deployable state at all times.
+16) which Lauch method allows Jenkins to Stort the slave nodes using REST API Cales.
+AnS Lauch agent via REST API
+17) How can you contribute to the developmat of Jenkins plugins.
+Ans: By Submitting pull requears @bug report.
+18) How Can you monitor & analyze Jenkins Job performance
+Ans: By using monitoring plugins & performae metrics.
+19) How en Jenkins be contigured to automaticky nongger build code Clages.
+Ans: By Contiguring webhools ors polling the version Control System.
+20) which componet of jenkins is responsible for managing the distribution of build jobs based on the workload and node availability
+Ans: jenkins master
