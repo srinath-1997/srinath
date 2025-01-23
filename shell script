@@ -189,7 +189,45 @@ One of the most commonly used utilities is ping. Here's a detailed explanation o
 
 16) how will you manage logs of a system that generate huge log file everyday
    useing logrotate  you can mangae logs of file 
-  
+
+
+#!/bin/bash
+
+
+##################
+#Authour-srinatha
+#date-22/1/2025
+#version- V1
+################
+
+#this script report the AWS resource usage
+########################################
+
+
+#AWS S3
+#AWS EC2
+#AWS Lambda
+#AWS IAM Users
+#
+
+set -x
+
+#list S3 buckets
+echo "print list of s3 buckets"
+aws s3 ls
+
+#list EC2 instances
+echo "print list of ec-2 instances | jq '.reservations[].instances[].instanceId'"
+aws ec2 describe-instances | jq '.Reservations[].Instances[].InstanceId'
+#list AwS lambda fucctions
+echo "print list of lambda functions"
+aws lambda list-functions
+
+#list the IAM users
+echo "print list of IMA users"
+aws iam list-users
+ use for create see the list of fuction in aws using shell scrit
+
 
 
 
