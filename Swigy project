@@ -1,0 +1,198 @@
+Process
+-------
+
+Step-1 
+Create access key and secret key using AWS IAM user
+
+Step-2
+Open VS code editor clone the repository where the main code that means terraform files is available 
+that one clone to local system and command is git clone (URL)
+git clone https://github.com/srinath-1997/Terraform-Script-Swiggy-Kastro.git
+after clone the repository in VS code select open folder----select the folder of terraform files available
+
+step-3
+open the terminal in VS code check the aws --version
+if not available you need to install AWS CLI on AWS website
+after installing application we need add environment variables path 
+go to advanced settings on system properties select environment variables click new then add the path of the application is available
+example path we need add ---C:\Program Files\Amazon\AWSCLIV2\awscli
+after that in vs code open file --- click on preferences at right side open json settings and add 
+{
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Program Files\\Amazon\\AWSCLIV2\\awscli;${env:PATH}"
+    }
+}
+ this if it is necessary 
+
+step-4 
+run the command aws configure
+first give access key and then secret key then it will show default region and mention that region
+PS C:\Users\direc\srinath-repo\Terraform-Script-Swiggy-Kastro> aws configure
+AWS Access Key ID [****************YDIP]: 
+AWS Secret Access Key [****************y+Ya]: 
+Default region name [us-west-2]: us-west-2
+Default output format [json]:  
+
+if region is not showing then go to .aws folder it will available in users path open config file in text editor and mention blow like that
+[default]
+region = us-west-2
+output = json
+
+Now actual project process starts
+----------------------------------
+
+first we need to initialize the terraform
+Command -- terraform init
+Note - if terraform not installed please install terraform and add path to environment variables and restart VS code
+
+to see the what resources are created run the command    terraform plan
+
+you need mention correct key pair name as in the AWS console and give correct AMI ID 
+
+for checking this details run the command called terraform apply or terraform apply --auto-approve (this command not ask any approve to crate resources)
+
+next connect the instance using SSH through moba gitbash what ever u have
+
+first we need update existing packages
+
+sudo apt update
+
+by using resource.sh file it automatically installed Jenkins java git and trivy docker 
+
+login to Jenkins dashboard using public ip and port no 8080
+login to SonarQube dashboard using public ip and port no 9000 (by default username and password is admin and admin)
+ 
+
+in Jenkins goto manage Jenkins ------- plugins ------ available plugins install below mentions plugins
+
+Eclipse Temurin installer ---purpose is when we using different versions of java for the project by using this plugin we select required version of java
+pipeline stage view  ---- to see the stage wise execution of project
+SonarQube Scanner --- to scan the code we using SonarQube 
+nodeJS -----NodeJS Plugin executes NodeJS script as a build step
+OWASP Dependency-Check ----This plug-in can independently execute a Dependency-Check analysis and visualize results. Dependency-Check is a utility that identifies project dependencies and checks if there are any known, publicly disclosed, vulnerabilities
+Docker----This plugin integrates Jenkins with Docker
+Docker Commons ----Provides the common shared functionality for various Docker-related plugins.
+Docker Pipeline -----Build and use Docker containers from pipelines.
+Docker API -------This plugin provides docker-java API for other plugins.
+docker-build-step----This plugin allows to add various docker commands to your job as build steps.
+
+after installation of plugins we need configure some tools to work with deployment
+
+Manage Jenkins --- tools --- add jdk ---give the name what you have mention in pipeline (jdk17) ---- install automatically---add installer ---Install from adoptium.net---- select java version jdk 17.0.11+9 after
+select SonarQube Scanner installations---- add SonarQube ---give the name what you have mention in pipeline (sonar-scanner) ----- select latest version after
+NodeJS installations --- add NodeJS -----give node23 it is latest version and give the name what you have mention in pipeline after
+Docker installations---- click on Add Docker ---- give the name what you have mention in pipeline (docker) ----- click on Install automatically----
+click on Download from docker.com----- after
+Dependency-Check installations---- add Dependency-Check ---- give the name what you have mention in pipeline (DP-Check) ------ Install automatically-----
+Add Installer ---- Install from github.com once it will done click on apply and then save.
+
+now we work on SonarQube configuration
+
+we configure the SonarQube for scan the code and it will show in Jenkins dashboard
+
+go to administration---- security ---- users ----right side click on 3 dots that show tokens - give token name ----select expiry days and click on generate--- copy the token and then go to Jenkins dashboard ----- manage Jenkins ----- security ----- credentials  ----- click on global --- add credentials-- kind --- secret text ---- paste the copied token in SonarQube and ID is--give the name what you have mention in pipeline (sonar-token) and description is also same..
+
+Now we create SonarQube webhook
+
+
+SonarQube dashboard ---- administration --- configuration --- webhook----create --- give name what ever u want and URL is Jenkins URL up to port no http://18.117.75.86:8080/sonarqube-webhook/ like this 
+
+now we need configure the SonarQube URL in the Jenkins
+
+Jenkins dashboard---- manage Jenkins ---- system configuration ---- system ----- SonarQube servers ---- add SonarQube ----name sonar-server---- URL give SonarQube URL up to Port no http://18.117.75.86:9000/ ----- select Server authentication token we already saved the token click on apply and save.
+
+now we want to configure Docker Hub credentials in Jenkins
+ 	
+Jenkins dashboard ---- manage Jenkins ---- security ---- credentials---- kind username and password---- scope global ---- username give user name ---- mention password --- id  give the name what you have mention in pipeline (docker-creds) and description also same and click on create.
+
+all configurations are completed 
+
+now u have to create a job or a project
+
+create a job ---- give the name swiggy project --- select pipeline ---
+
+pipeline{
+    agent any
+    tools{
+        jdk 'jdk17'
+        nodejs 'node23'
+    }
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+    }
+    stages {
+        stage('clean workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git'){
+            steps{
+                git 'https://github.com/srinath-1997/DevOps-Project-Swiggy.git'
+            }
+        }
+        stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Swiggy \
+                    -Dsonar.projectKey=Swiggy '''
+                }
+            }
+        }
+        stage("quality gate"){
+           steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
+                }
+            } 
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        stage('OWASP FS SCAN') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }
+        stage("Docker Build & Push"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker-creds', toolName: 'docker'){   
+                       sh "docker build -t swiggy ."
+                       sh "docker tag swiggy srinath7019/swiggy:latest "
+                       sh "docker push srinath7019/swiggy:latest "
+                    }
+                }
+            }
+        }
+        stage("TRIVY"){
+            steps{
+                sh "trivy image srinath7019/swiggy:latest > trivy.txt" 
+            }
+        }
+        stage('Deploy to container'){
+            steps{
+                sh 'docker run -d --name swiggy -p 3000:3000 srinath7019/swiggy:latest'
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+ 
+
+
