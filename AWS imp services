@@ -1,0 +1,14 @@
+EC2 instances
+VPC-networking
+EBS and EFS-storage volumes
+S3 buckets
+IAM
+cloud watch-monitroing
+Cloud trail
+Lamda-serverless function
+cloudbuild service-CICD tool
+AWS configuration
+Billing and Costing
+AWS KMS-key management service
+AWS EKS
+ELK- Elastic search
