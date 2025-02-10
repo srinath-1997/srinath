@@ -1,20 +1,20 @@
 - name: configure docker
   hosts: all
   become: true
-  tasks
+  tasks:
 
-  - name: updating the apt
-    command: apt-get update 
+  - name: updating the packages
+    command: apt-get update
 
-  - name: install the docker
+  - name: install docker
     apt:
       name: docker.io
       state: present
 
-  - name: start the docker
-     service:
-       name: docker
-       state: started
+  - name: start docker service
+    service:
+      name: docker
+      state: started
 
- - name: depoly to container
-   command: docker run -d -p 8080:8082 srinath7019/healthcareproject:1
+  - name: deploy to container
+    command: docker run -d -p 8080:8082 srinath7019/healthcareproject:1
