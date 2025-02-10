@@ -1,57 +1,20 @@
-pipeline {
-    agent any
+- name: configure docker
+  hosts: all
+  become: true
+  tasks
 
-    tools {
-    maven 'mymaven'
-    }
+  - name: updating the apt
+    command: apt-get update 
 
-    stages {
-        stage ('clone the repo') {
-            steps {
-                git 'https://github.com/srinath-1997/srinath-repo.git'
-            }
-         }
+  - name: install the docker
+    apt:
+      name: docker.io
+      state: present
 
-         stage ('Test the code') {
-             steps {
-                 sh 'mvn test'
-             }
-         }
+  - name: start the docker
+     service:
+       name: docker
+       state: started
 
-         stage ('Build the code') {
-             steps {
-                 sh 'mvn package'
-             }
-         }
-
-         stage ('Build Image') {
-             steps {
-                 sh 'docker build -t myapp:${BUILD_NUMBER} .'
-              }
-         }
-
-         stage ('push the image to dockerhub') {
-             steps {
-         withCredentials([string(credentialsId: 'DOCKER_HUB_PASWD' , variable: 'DOCKER_HUB_PASWD')])
-             {
-              sh 'docker login -u srinath7019 -p ${DOCKER_HUB_PASWD}'
-             }
-              sh 'docker tag myapp:${BUILD_NUMBER} srinath7019/myapp:${BUILD_NUMBER}'
-              sh 'docker push srinath7019/myapp:${BUILD_NUMBER}'
-             }
-          }
-
-          stage ('Execute ansible playbook') {
-              steps {
-                  ansibleplaybook(
-                      credentialsId: 'ansible',
-                      disableHostKeyChecking: true,
-                      installation: 'ansible',
-                      inventory: '/home/ansiuser/myinventory',
-                      playbook: 'ansible-playbook.yml'
-                      vaultTmpPath: ''
-                   )
-                }
-           }
-      }
-}
+ - name: depoly to container
+   command: docker run -d -p 8080:8082 srinath7019/healthcareproject:1
