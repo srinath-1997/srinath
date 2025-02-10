@@ -1,12 +1,5 @@
-   stage('execute playbook')
-        {
-            steps{
-                ansibleplaybook credentialsId: 'ansible' , diableHostKeyChecking: true, installation: 'ansible' , inventory: '/home/ansiuser/myinventory' , playbook: 'ansible-playbook.yml' , vaultpath: ' '
-    }
-}
-
-
 pipeline {
+
     agent any
     
     tools {
@@ -34,15 +27,14 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                sh 'docker build -t insurenceproject:$BUILD_NUMBER .'  // Build Docker image
+                sh 'docker build -t insurenceproject:$BUILD_NUMBER .'  
             }
         }
 
-        
         stage('Push the Image to Dockerhub') {
             steps {
                 withCredentials([string(credentialsId: 'DOCKER_HUB_PASWD', variable: 'DOCKER_HUB_PASWD')]) {
-                    sh 'docker login -u srinath7019 -p ${DOCKER_HUB_PASWD}'  // Login to DockerHub
+                    sh 'docker login -u srinath7019 -p ${DOCKER_HUB_PASWD}'  
                 }
                 sh 'docker tag insurenceproject:$BUILD_NUMBER srinath7019/insurenceproject:$BUILD_NUMBER'  
                 sh 'docker push srinath7019/insurenceproject:$BUILD_NUMBER' 
@@ -52,14 +44,28 @@ pipeline {
         stage('Execute Ansible Playbook') {
             steps {
                 ansiblePlaybook(
-                    credentialsId: 'ansible',  
+                    credentialsId: 'ansible', 
                     disableHostKeyChecking: true,
-                    installation: 'ansible', 
-                    inventory: '/home/ansiuser/myinventory',  
-                    playbook: 'ansible-playbook.yml',  
-                    vaultPasswordFile: '' 
-                )
+                    installation: 'ansible',
+                    inventory: '/home/ansiuser/inventory',
+                    playbook: 'ansibleplaybook.yml'
+                    )
+               }
+           }
+
+           stage ('set kubeconfigpath'){
+               steps {
+                   script {
+                        env.KUBECONFIG = '/var/jenkins_home/.kube/config'
+                   }
+                }
+            } 
+
+           stage ('deploy to production'){
+               steps {
+                   sh 'kubectl apply -f k8s/deployment.yml'
+                   sh 'kubectl apply -f k8s/service.yml'
+               }
             }
         }
-    }
-}
+   }
