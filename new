@@ -16,4 +16,4 @@ spec:
         - name: healthcareproject
           image: srinath7019/healthcareproject:1
           ports:
-            - containerPort: 8082
+            - containerPort: 8082 
