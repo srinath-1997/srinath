@@ -5,8 +5,10 @@ metadata:
 spec:
   selector:
     app: healthcareproject
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8082
-  type: NodePort
+type: NodePort
+ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8082
+    nodeport: 30008 
+    
